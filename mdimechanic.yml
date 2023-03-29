@@ -1,11 +1,14 @@
 code_name: 'Tinker 9'
 docker:
-  image_name: 'mdi/tinker9'
+  image_name: 'mdi/tinker9-cpu'
   gpu:
     type: 'nvidia'
 
   build_image:
-    - echo "Build image step"
+    - apt-get update
+    - apt-get install -y --no-install-recommends git wget vim
+    - apt-get install -y --no-install-recommends libfftw3-dev
+    - pip install cmake
 
   build_engine:
     - |
@@ -16,7 +19,7 @@ docker:
     - rm -rf build
     - mkdir -p build
     - cd build
-    - FC=gfortran compute_capability=86 gpu_lang=CUDA cmake ..
+    - FC=gfortran TINKER_CUDART=1 cmake -DHOST=ON -DPREC=double ..
     - make
     - make test
 
