@@ -6,22 +6,21 @@ docker:
     - apt-get update
     - apt-get install -y --no-install-recommends git wget vim
     - apt-get install -y --no-install-recommends libfftw3-dev
-    - mkdir -p /usr/lib/x86_64-linux-gnu/lib
-    - ln -s /usr/lib/x86_64-linux-gnu/libfftw3.a /usr/lib/x86_64-linux-gnu/lib/libfftw3.a
-    - ln -s /usr/lib/x86_64-linux-gnu/libfftw3_threads.a /usr/lib/x86_64-linux-gnu/lib/libfftw3_threads.a
+    - mkdir -p /usr/lib
+    - ln -s /usr/lib/x86_64-linux-gnu/libfftw3.a /usr/lib/libfftw3.a
+    - ln -s /usr/lib/x86_64-linux-gnu/libfftw3_threads.a /usr/lib/libfftw3_threads.a
     - pip install cmake
 
   build_engine:
     - |
-      if [ ! -d "/repo/build/tinker9" ]; then
-        git clone https://github.com/TinkerTools/tinker9.git /repo/build/tinker9
+      if [ ! -d "/repo/tinker9" ]; then
+        git clone https://github.com/kevafong/tinker9.git /repo/tinker9
       fi
-    - cd /repo/build/tinker9
-    - rm -rf build
+    - cd /repo/tinker9
+    #- rm -rf build
     - mkdir -p build
     - cd build
     - FC=gfortran TINKER_CUDART=1 cmake -DHOST=ON -DPREC=double -DFFTW_DIR=/usr ..
-    - FC=gfortran TINKER_CUDART=1 cmake -DHOST=ON -DPREC=double -DFFTW_DIR=/usr/lib/x86_64-linux-gnu ..
     - make
     - make test
 
