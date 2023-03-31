@@ -1,13 +1,14 @@
 code_name: 'Tinker 9'
 docker:
   image_name: 'mdi/tinker9-cpu'
-  gpu:
-    type: 'nvidia'
 
   build_image:
     - apt-get update
     - apt-get install -y --no-install-recommends git wget vim
     - apt-get install -y --no-install-recommends libfftw3-dev
+    - mkdir -p /usr/lib/x86_64-linux-gnu/lib
+    - ln -s /usr/lib/x86_64-linux-gnu/libfftw3.a /usr/lib/x86_64-linux-gnu/lib/libfftw3.a
+    - ln -s /usr/lib/x86_64-linux-gnu/libfftw3_threads.a /usr/lib/x86_64-linux-gnu/lib/libfftw3_threads.a
     - pip install cmake
 
   build_engine:
@@ -19,7 +20,8 @@ docker:
     - rm -rf build
     - mkdir -p build
     - cd build
-    - FC=gfortran TINKER_CUDART=1 cmake -DHOST=ON -DPREC=double ..
+    - FC=gfortran TINKER_CUDART=1 cmake -DHOST=ON -DPREC=double -DFFTW_DIR=/usr ..
+    - FC=gfortran TINKER_CUDART=1 cmake -DHOST=ON -DPREC=double -DFFTW_DIR=/usr/lib/x86_64-linux-gnu ..
     - make
     - make test
 
