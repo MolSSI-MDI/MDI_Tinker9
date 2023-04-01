@@ -33,3 +33,15 @@ engine_tests:
   script:
     - echo "Insert commands to run an example calculation here"
     - exit 1
+
+
+
+run_scripts:
+
+  water:
+    containers:
+      container1:
+        image: 'mdi/tinker9-cpu'
+        script:
+          - cd /repo/tests/water
+          - /repo/tinker9/build/dynamic9 tinker.xyz /repo/tinker9/params/amoebabio09.prm -k tinker.key 1000 1.0 10.0 2 298.0 1.0 > tinker.out
