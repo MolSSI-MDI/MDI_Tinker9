@@ -44,4 +44,4 @@ run_scripts:
         image: 'mdi/tinker9-cpu'
         script:
           - cd /repo/tests/water
-          - /repo/tinker9/build/dynamic9 tinker.xyz /repo/tinker9/params/amoebabio09.prm -k tinker.key 1000 1.0 10.0 2 298.0 1.0 > tinker.out
+          - /repo/tinker9/build/dynamic9 tinker.xyz /repo/tinker9/params/amoebabio09.prm -k tinker.key 1000 1.0 0.1 4 298.0 1.0 > tinker.out
