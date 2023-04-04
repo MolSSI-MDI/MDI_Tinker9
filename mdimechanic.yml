@@ -14,14 +14,14 @@ docker:
   build_engine:
     - |
       if [ ! -d "/repo/tinker9" ]; then
-        git clone https://github.com/kevafong/tinker9.git /repo/tinker9
+        git clone https://github.com/taylor-a-barnes/tinker9.git --branch mdi-taylor /repo/tinker9
       fi
     - cd /repo/tinker9
     #- rm -rf build
     - mkdir -p build
     - cd build
-    - FC=gfortran TINKER_CUDART=1 cmake -DHOST=ON -DPREC=double -DFFTW_DIR=/usr ..
-    - make
+    - FC=gfortran TINKER_CUDART=1 cmake -DHOST=ON -DPREC=double -DFFTW_DIR=/usr -DMDI=ON ..
+    - make VERBOSE=1
     - make test
 
   validate_engine:
