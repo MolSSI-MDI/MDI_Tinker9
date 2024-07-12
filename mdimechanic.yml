@@ -4,7 +4,7 @@ docker:
 
   build_image:
     - apt-get update
-    - apt-get install -y --no-install-recommends git wget vim
+    - apt-get install -y --no-install-recommends gfortran libmpich-dev make git wget vim python3-dev python3-venv python3-pip
     - apt-get install -y --no-install-recommends libfftw3-dev
     - mkdir -p /usr/lib
     - ln -s /usr/lib/x86_64-linux-gnu/libfftw3.a /usr/lib/libfftw3.a
@@ -13,14 +13,12 @@ docker:
 
   build_engine:
     - |
-      if [ ! -d "/repo/tinker9" ]; then
-        git clone https://github.com/taylor-a-barnes/tinker9.git --branch mdi-taylor /repo/tinker9
+      if [ ! -d "/repo/build/tinker9" ]; then
+        git clone https://github.com/MolSSI-MDI/tinker9.git --branch mdi /repo/build/tinker9
       fi
-    - cd /repo/tinker9
-    #- rm -rf build
-    - mkdir -p build
-    - cd build
-    - FC=gfortran TINKER_CUDART=1 cmake -DHOST=ON -DPREC=double -DFFTW_DIR=/usr -DMDI=ON ..
+    - mkdir -p /repo/build/tinker9/build
+    - cd /repo/build/tinker9/build
+    - FC=gfortran CC=gcc CXX=g++ TINKER_CUDART=1 cmake -DHOST=ON -DPREC=double -DFFTW_DIR=/usr -DMDI=ON ..
     - make VERBOSE=1
     - make test
 
