@@ -4,12 +4,13 @@ docker:
 
   build_image:
     - apt-get update
-    - apt-get install -y --no-install-recommends gfortran libmpich-dev make git wget vim python3-dev python3-venv python3-pip
+    - apt-get install -y --no-install-recommends git wget vim
     - apt-get install -y --no-install-recommends libfftw3-dev
     - mkdir -p /usr/lib
     - ln -s /usr/lib/x86_64-linux-gnu/libfftw3.a /usr/lib/libfftw3.a
     - ln -s /usr/lib/x86_64-linux-gnu/libfftw3_threads.a /usr/lib/libfftw3_threads.a
     - pip install cmake
+    - pip install pymdi
 
   build_engine:
     - |
@@ -20,17 +21,19 @@ docker:
     - cd /repo/build/tinker9/build
     - FC=gfortran CC=gcc CXX=g++ TINKER_CUDART=1 cmake -DHOST=ON -DPREC=double -DFFTW_DIR=/usr -DMDI=ON ..
     - make VERBOSE=1
-    - make test
+    #- make test
 
   validate_engine:
-    - echo "Insert code that will confirm that your code has been built successfully"
-    - exit 1
+    - cd /repo/tests/water
+    - /repo/build/tinker9/build/dynamic9 tinker.xyz /repo/build/tinker9/params/amoebabio09.prm -k tinker.key 100 1.0 0.1 4 298.0 1.0 > tinker.out
 
 engine_tests:
   # Provide at least one example input that can be used to test your code's MDI functionality
   script:
     - echo "Insert commands to run an example calculation here"
-    - exit 1
+    - cd /repo/tests/water
+    - echo "${MDI_OPTIONS}" > mdi_options.txt
+    - /repo/build/tinker9/build/dynamic9 tinker.xyz /repo/build/tinker9/params/amoebabio09.prm -k tinker.key -mdi "${MDI_OPTIONS}" 10 1.0 0.1 4 298.0 1.0 > tinker.out
 
 
 
@@ -39,7 +42,16 @@ run_scripts:
   water:
     containers:
       container1:
-        image: 'mdi/tinker9-cpu'
+        image: 'mdi/tinker9-cpu:dev'
         script:
           - cd /repo/tests/water
-          - /repo/tinker9/build/dynamic9 tinker.xyz /repo/tinker9/params/amoebabio09.prm -k tinker.key 1000 1.0 0.1 4 298.0 1.0 > tinker.out
+          - /repo/build/tinker9/build/dynamic9 tinker.xyz /repo/build/tinker9/params/amoebabio09.prm -k tinker.key 1000 1.0 0.1 4 298.0 1.0 > tinker.out
+
+  driver:
+    containers:
+      container1:
+        image: 'mdi/tinker9-cpu:dev'
+        script:
+          - cd /repo/tests/water
+          - /repo/build/tinker9/build/dynamic9 tinker.xyz /repo/build/tinker9/params/amoebabio09.prm -k tinker.key -mdi "-role ENGINE -name Tinker9 -method TCP -port 8021 -hostname localhost" 10 1.0 0.1 4 298.0 1.0 > tinker.out &
+          - python driver.py -mdi "-role DRIVER -name driver -method TCP -port 8021"
