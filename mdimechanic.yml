@@ -53,5 +53,5 @@ run_scripts:
         image: 'mdi/tinker9-cpu:dev'
         script:
           - cd /repo/tests/water
-          - /repo/build/tinker9/build/dynamic9 tinker.xyz /repo/build/tinker9/params/amoebabio09.prm -k tinker.key -mdi "-role ENGINE -name Tinker9 -method TCP -port 8021 -hostname localhost" 10 1.0 0.1 4 298.0 1.0 > tinker.out &
+          - /repo/build/tinker9/build/dynamic9 tinker.xyz /repo/build/tinker9/params/amoebabio09.prm -k tinker.key -mdi "-role ENGINE -name Tinker9 -method TCP -port 8021 -hostname localhost" 100 1.0 0.1 4 298.0 1.0 > tinker.out &
           - python driver.py -mdi "-role DRIVER -name driver -method TCP -port 8021"
