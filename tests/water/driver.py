@@ -69,6 +69,14 @@ for iteration in range(20):
     mdi.MDI_Send_Command(">FORCES", comm)
     mdi.MDI_Send(forces, 3 * natoms, mdi.MDI_DOUBLE, comm)
     
+    mdi.MDI_Send_Command("<VELOCITIES", comm)
+    velocities = mdi.MDI_Recv(3 * natoms, mdi.MDI_DOUBLE, comm)
+    #print("   VELOCITIES: " + str(velocities))
+    
+    velocities = [ 0.0 for i in range(3*natoms) ]
+    mdi.MDI_Send_Command(">VELOCITIES", comm)
+    mdi.MDI_Send(velocities, 3 * natoms, mdi.MDI_DOUBLE, comm)
+    
 
 
 #mdi.MDI_Send_Command("@INIT_MD", comm)
