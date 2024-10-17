@@ -108,6 +108,6 @@ for iteration in range(20):
 #ke = mdi.MDI_Recv(1, mdi.MDI_DOUBLE, comm)
 #print("KE: " + str(ke))
 
-print("CCC")
+print("End of simulation")
 
 mdi.MDI_Send_Command("EXIT", comm)
